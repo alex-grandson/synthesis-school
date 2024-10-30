@@ -11,14 +11,17 @@ job 3:
   tags:
   - gitflic-light-config
   script: 
-    - apt install make tar wget build-essential bison flex gperf readline-common libncurses5-dev nmon autoconf -y
+    - apt update && apt install make tar wget build-essential bison flex gperf readline-common libncurses5-dev nmon autoconf -y
     - wget https://sourceforge.net/projects/iverilog/files/iverilog/12.0/verilog-12.0.tar.gz/download
-    - tar -xzf verilog-12.0.tar.gz
+    - tar -xzf download
     - cd verilog-12.0
     - ./configure --prefix=/usr 
     - make check
     - make install
-    - cd 01_combinational_logic && ./run_linux_mac.sh
+    - cd ../01_combinational_logic && ./run_linux_mac.sh | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > ../test_result.txt)
+  artifacts:
+    paths:
+      - test_result.txt
   # only:
   #   changes:
   #     - 01_combinational_logic/*
