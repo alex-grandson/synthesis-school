@@ -9,7 +9,7 @@ hw1:lint:
       - 01_combinational_logic/lint.txt
   only:
     changes:
-      - 01_combinational_logic/*
+      - 01_combinational_logic/**
 hw1:
   image: cr.vnuk.tech/library/syntesis-ubuntu:master
   needs: 
@@ -23,7 +23,7 @@ hw1:
       - test_result.txt
   only:
     changes:
-      - 01_combinational_logic/*
+      - 01_combinational_logic/**
 
 hw2:lint:
   image: cr.vnuk.tech/library/syntesis-ubuntu:master
@@ -36,7 +36,7 @@ hw2:lint:
       - 02_sequential_basics/lint.txt
   only:
     changes:
-      - 02_sequential_basics/*
+      - 02_sequential_basics/**
 hw2:
   image: cr.vnuk.tech/library/syntesis-ubuntu:master
   needs: 
@@ -50,4 +50,4 @@ hw2:
       - test_result.txt
   only:
     changes:
-      - 02_sequential_basics/*
+      - 02_sequential_basics/**
