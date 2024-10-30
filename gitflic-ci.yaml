@@ -1,0 +1,8 @@
+job 1:
+  tags:
+  - gitflic-light-config
+  script: echo "Привет всем"
+job 2:
+  tags:
+  - gitflic-light-config
+  script: echo "И хорошего настроения"
