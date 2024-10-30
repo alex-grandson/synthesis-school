@@ -18,6 +18,7 @@ hw1:
   - gitflic-light-config
   script: 
     - cd 01_combinational_logic && ./run_linux_mac.sh | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > ../test_result.txt)
+    - grep -q "FAIL" ../test_result.txt && return 1 || return 0
   artifacts:
     paths:
       - test_result.txt
@@ -45,6 +46,7 @@ hw2:
   - gitflic-light-config
   script: 
     - cd 02_sequential_basics && ./run_linux_mac.sh | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > ../test_result.txt)
+    - grep -q "FAIL" ../test_result.txt && return 1 || return 0
   artifacts:
     paths:
       - test_result.txt
