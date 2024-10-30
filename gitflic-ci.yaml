@@ -1,27 +1,53 @@
-job 1:
-  tags:
-  - gitflic-light-config
-  script: echo "Привет всем"
-job 2:
-  tags:
-  - gitflic-light-config
-  script: echo "И хорошего настроения"
-job 3:
-  image: ubuntu:24.04
+hw1:lint:
+  image: cr.vnuk.tech/library/syntesis-ubuntu:master
   tags:
   - gitflic-light-config
   script: 
-    - apt update && apt install make tar wget build-essential bison flex gperf readline-common libncurses5-dev nmon autoconf -y
-    - wget https://sourceforge.net/projects/iverilog/files/iverilog/12.0/verilog-12.0.tar.gz/download
-    - tar -xzf download
-    - cd verilog-12.0
-    - ./configure --prefix=/usr 
-    - make check
-    - make install
-    - cd ../01_combinational_logic && ./run_linux_mac.sh | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > ../test_result.txt)
+    - cd 01_combinational_logic && ./run_linux_mac.sh --lint && cat lint.txt
+  artifacts:
+    paths:
+      - 01_combinational_logic/lint.txt
+  only:
+    changes:
+      - 01_combinational_logic/*
+hw1:
+  image: cr.vnuk.tech/library/syntesis-ubuntu:master
+  needs: 
+    - hw1:lint
+  tags:
+  - gitflic-light-config
+  script: 
+    - cd 01_combinational_logic && ./run_linux_mac.sh | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > ../test_result.txt)
   artifacts:
     paths:
       - test_result.txt
-  # only:
-  #   changes:
-  #     - 01_combinational_logic/*
+  only:
+    changes:
+      - 01_combinational_logic/*
+
+hw2:lint:
+  image: cr.vnuk.tech/library/syntesis-ubuntu:master
+  tags:
+  - gitflic-light-config
+  script: 
+    - cd 02_sequential_basics && ./run_linux_mac.sh --lint && cat lint.txt
+  artifacts:
+    paths:
+      - 02_sequential_basics/lint.txt
+  only:
+    changes:
+      - 02_sequential_basics/*
+hw2:
+  image: cr.vnuk.tech/library/syntesis-ubuntu:master
+  needs: 
+    - hw2:lint
+  tags:
+  - gitflic-light-config
+  script: 
+    - cd 02_sequential_basics && ./run_linux_mac.sh | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > ../test_result.txt)
+  artifacts:
+    paths:
+      - test_result.txt
+  only:
+    changes:
+      - 02_sequential_basics/*
