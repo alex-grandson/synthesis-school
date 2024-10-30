@@ -4,7 +4,7 @@ hw1:lint:
   - gitflic-light-config
   script: 
     - cd 01_combinational_logic && ./run_linux_mac.sh --lint && cat lint.txt
-    - grep -q "%Error" lint.txt && return 1 || return 0
+    - grep -q "%Error: Exiting due to" lint.txt && return 1 || return 0
   artifacts:
     paths:
       - 01_combinational_logic/lint.txt
@@ -33,7 +33,7 @@ hw2:lint:
   - gitflic-light-config
   script: 
     - cd 02_sequential_basics && ./run_linux_mac.sh --lint && cat lint.txt
-    - grep -q "%Error" lint.txt && return 1 || return 0
+    - grep -q "%Error: Exiting due to" lint.txt && return 1 || return 0
   artifacts:
     paths:
       - 02_sequential_basics/lint.txt
