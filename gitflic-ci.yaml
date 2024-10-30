@@ -6,3 +6,19 @@ job 2:
   tags:
   - gitflic-light-config
   script: echo "И хорошего настроения"
+job 3:
+  image: ubuntu:24.04
+  tags:
+  - gitflic-light-config
+  script: 
+    - apt install make tar wget build-essential bison flex gperf readline-common libncurses5-dev nmon autoconf -y
+    - wget https://sourceforge.net/projects/iverilog/files/iverilog/12.0/verilog-12.0.tar.gz/download
+    - tar -xzf verilog-12.0.tar.gz
+    - cd verilog-12.0
+    - ./configure --prefix=/usr 
+    - make check
+    - make install
+    - cd 01_combinational_logic && ./run_linux_mac.sh
+  # only:
+  #   changes:
+  #     - 01_combinational_logic/*
