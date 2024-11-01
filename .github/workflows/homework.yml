@@ -1,0 +1,100 @@
+name: Lint and Build Pipelines
+
+on:
+  push:
+    paths:
+      - '01_combinational_logic/**/*'
+      - '02_sequential_basics/**/*'
+
+jobs:
+  hw1-lint:
+    runs-on: ubuntu-latest
+    container:
+      image: cr.vnuk.tech/library/syntesis-ubuntu:master
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Lint for HW1
+        run: |
+          cd 01_combinational_logic
+          ./run_linux_mac.sh --lint
+          cat lint.txt
+          if grep -q "Exiting due to" lint.txt; then
+            exit 1
+          fi
+
+      - name: Upload lint results
+        uses: actions/upload-artifact@v2
+        with:
+          name: hw1-lint-results
+          path: 01_combinational_logic/lint.txt
+
+  hw1:
+    runs-on: ubuntu-latest
+    needs: hw1-lint
+    container:
+      image: cr.vnuk.tech/library/syntesis-ubuntu:master
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run HW1 Test
+        run: |
+          cd 01_combinational_logic
+          ./run_linux_mac.sh | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > ../test_result.txt)
+          if grep -q "FAIL" ../test_result.txt; then
+            exit 1
+          fi
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: hw1-test-results
+          path: test_result.txt
+
+  hw2-lint:
+    runs-on: ubuntu-latest
+    container:
+      image: cr.vnuk.tech/library/syntesis-ubuntu:master
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Lint for HW2
+        run: |
+          cd 02_sequential_basics
+          ./run_linux_mac.sh --lint
+          cat lint.txt
+          if grep -q "Exiting due to" lint.txt; then
+            exit 1
+          fi
+
+      - name: Upload lint results
+        uses: actions/upload-artifact@v2
+        with:
+          name: hw2-lint-results
+          path: 02_sequential_basics/lint.txt
+
+  hw2:
+    runs-on: ubuntu-latest
+    needs: hw2-lint
+    container:
+      image: cr.vnuk.tech/library/syntesis-ubuntu:master
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run HW2 Test
+        run: |
+          cd 02_sequential_basics
+          ./run_linux_mac.sh | tee >(sed $'s/\033[[][^A-Za-z]*m//g' > ../test_result.txt)
+          if grep -q "FAIL" ../test_result.txt; then
+            exit 1
+          fi
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: hw2-test-results
+          path: test_result.txt
